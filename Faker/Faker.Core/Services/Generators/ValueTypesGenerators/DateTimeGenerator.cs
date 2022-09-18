@@ -9,7 +9,7 @@ public class DateTimeGenerator : GeneratorBase
     {
         if (!CanGenerate(typeToGenerate))
         {
-            base.Generate(typeToGenerate, context);
+            return base.Generate(typeToGenerate, context);
         }
         
         var year = context.Random.Next(DateTime.MinValue.Year, DateTime.MaxValue.Year + 1);

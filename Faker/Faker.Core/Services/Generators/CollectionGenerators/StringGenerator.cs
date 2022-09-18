@@ -28,7 +28,7 @@ public class StringGenerator : GeneratorBase
     {
         if (!CanGenerate(typeToGenerate))
         {
-            base.Generate(typeToGenerate, context);
+            return base.Generate(typeToGenerate, context);
         }
         
         var length = context.Random.Next(this.lengthRange.Minimum, this.lengthRange.Maximum + 1);

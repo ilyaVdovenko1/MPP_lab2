@@ -10,7 +10,7 @@ public class DoubleGenerator : GeneratorBase
     {
         if (!CanGenerate(typeToGenerate))
         {
-            base.Generate(typeToGenerate, context);
+            return base.Generate(typeToGenerate, context);
         }
         
         return context.Random.NextDouble();

@@ -18,7 +18,7 @@ public abstract class GeneratorBase : IValueGenerator
     {
         if (nextGenerator != null)
         {
-            this.nextGenerator.Generate(typeToGenerate, context);
+            return this.nextGenerator.Generate(typeToGenerate, context);
         }
 
         throw new WrongTypeToGenerateException("No generators for this type.");

@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Services\Generators\ReferenceTypeGenerators" />
-      <Folder Include="Services\Generators\UsersTypesGenerators" />
     </ItemGroup>
 
 </Project>

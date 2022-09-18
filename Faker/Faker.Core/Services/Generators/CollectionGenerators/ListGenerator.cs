@@ -8,8 +8,8 @@ namespace Faker.Core.Services.Generators.CollectionGenerators;
 
 public class ListGenerator : GeneratorBase
 {
-    private const int DefaultMinLength = 0;
-    private const int DefaultMaxLength = 100;
+    private const int DefaultMinLength = 1;
+    private const int DefaultMaxLength = 10;
     
     private readonly Range<int> lengthRange;
 
@@ -26,7 +26,7 @@ public class ListGenerator : GeneratorBase
     {
         if (!CanGenerate(typeToGenerate))
         {
-            base.Generate(typeToGenerate, context);
+            return base.Generate(typeToGenerate, context);
         }
         
         var length = context.Random.Next(this.lengthRange.Minimum, this.lengthRange.Maximum + 1);

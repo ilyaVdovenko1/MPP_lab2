@@ -10,7 +10,7 @@ public class BoolGenerator : GeneratorBase
     {
         if (!CanGenerate(typeToGenerate))
         {
-            base.Generate(typeToGenerate, context);
+            return base.Generate(typeToGenerate, context);
         }
 
         return context.Random.Next() % 2 == 0;

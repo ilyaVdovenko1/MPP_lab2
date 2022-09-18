@@ -10,7 +10,7 @@ public class CharGenerator : GeneratorBase
     {
         if (!CanGenerate(typeToGenerate))
         {
-            base.Generate(typeToGenerate, context);
+            return base.Generate(typeToGenerate, context);
         }
         
         return (char)context.Random.Next('A', 'Z');
