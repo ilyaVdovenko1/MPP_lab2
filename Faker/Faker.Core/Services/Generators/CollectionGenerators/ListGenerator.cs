@@ -37,7 +37,7 @@ public class ListGenerator : GeneratorBase
         var list = (IList?)Activator.CreateInstance(typeToGenerate)
                    ?? throw new WrongTypeToGenerateException($"This generator can not generate this type: {typeToGenerate}");
         
-        for (var i = 0; i < length - 1; i++)
+        for (var i = 0; i < length; i++)
         {
             list.Add(context.Faker.Create(generationType));
             Thread.Sleep(1);

@@ -25,7 +25,7 @@ public class Faker : IFaker
         return (T?)Create(typeof(T));
     }
 
-    public object? Create(Type type)
+    public virtual object? Create(Type type)
     {
         var generatorContext = new GeneratorContext(this.random, this);
 
