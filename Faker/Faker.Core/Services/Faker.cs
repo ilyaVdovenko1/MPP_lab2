@@ -1,6 +1,7 @@
 ﻿using Faker.Core.Interfaces;
+using Faker.Core.Models;
 
-namespace Faker.Core.Models;
+namespace Faker.Core.Services;
 
 public class Faker : IFaker
 {
@@ -11,6 +12,12 @@ public class Faker : IFaker
     {
         this.generator = generator;
         this.random = new Random();
+    }
+
+    public Faker(Random random, IValueGenerator valueGenerator)
+    {
+        this.generator = valueGenerator;
+        this.random = random;
     }
     
     public T? Create<T>()

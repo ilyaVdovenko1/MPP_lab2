@@ -1,10 +1,10 @@
 ﻿using Faker.Core.Services.Generators;
 using Faker.Example.TestClasses;
-using Faker = Faker.Core.Models.Faker;
+using Faker = Faker.Core.Services.Faker;
 
 var generators = DefaultGeneratorsFactory.CreateDefaultGenerator();
 
-var faker = new global::Faker.Core.Models.Faker(generators);
+var faker = new global::Faker.Core.Services.Faker(generators);
 
 var boolValue = faker.Create<bool>();
 var intValue = faker.Create<int>();
