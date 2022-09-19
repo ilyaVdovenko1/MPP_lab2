@@ -24,5 +24,10 @@ public abstract class GeneratorBase : IValueGenerator
         throw new WrongTypeToGenerateException("No generators for this type.");
     }
 
+    protected object? GenerateWithConcreteGenerator(IValueGenerator generator, Type typeToGenerate, GeneratorContext generatorContext)
+    {
+        return generator.Generate(typeToGenerate, generatorContext);
+    }
+
     public abstract bool CanGenerate(Type type);
 }

@@ -1,19 +1,33 @@
 ﻿using System.Reflection;
 using Faker.Core.Exceptions;
+using Faker.Core.Interfaces;
 using Faker.Core.Models;
 
 namespace Faker.Core.Services.Generators.UsersTypesGenerators.UserClassProcessor;
 
 public class UserClassGenerator : GeneratorBase
 {
-    private HashSet<Type> types;
+    private readonly IPropertyPicker picker;
+    private readonly HashSet<Type> types;
+
+    public UserClassGenerator(IPropertyPicker picker)
+    {
+        this.picker = picker;
+        this.types = new HashSet<Type>();
+    }
+
     public UserClassGenerator()
     {
+        this.picker = new EmptyPicker();
         this.types = new HashSet<Type>();
     }
 
     public override object? Generate(Type typeToGenerate, GeneratorContext context)
     {
+        if (!this.picker.ValidateClass(typeToGenerate))
+        {
+            return base.Generate(typeToGenerate, context);
+        }
         if (!CanGenerate(typeToGenerate))
         {
             return base.Generate(typeToGenerate, context);
@@ -27,7 +41,9 @@ public class UserClassGenerator : GeneratorBase
         this.types.Add(typeToGenerate);
 
         var properties = typeToGenerate.GetProperties();
-        var propValues = properties.Where(propertyInfo => propertyInfo.CanWrite).ToDictionary(propertyInfo => propertyInfo, propertyInfo => context.Faker.Create(propertyInfo.PropertyType));
+        
+        var customPropValues = properties.Where(propertyInfo => propertyInfo.CanWrite && this.picker.ShouldPickProperty(propertyInfo)).ToDictionary(propertyInfo => propertyInfo, propertyInfo => base.GenerateWithConcreteGenerator(this.picker.PropertyGenerator, propertyInfo.PropertyType, context));
+        var propValues = properties.Where(propertyInfo => propertyInfo.CanWrite && !this.picker.ShouldPickProperty(propertyInfo)).ToDictionary(propertyInfo => propertyInfo, propertyInfo => context.Faker.Create(propertyInfo.PropertyType));
 
         var constructors = typeToGenerate.GetConstructors();
         var comparer = new ConstructorComparer();
@@ -38,9 +54,12 @@ public class UserClassGenerator : GeneratorBase
         {
             var paramsTypes = constructor.GetParameters();
 
+
             try
             {
-                obj = constructor.Invoke(paramsTypes.Select(info => context.Faker.Create(info.ParameterType)).ToArray());
+                obj = constructor.Invoke(paramsTypes.Select(type => this.picker.ShouldPickConstructorParam(type)
+                    ? this.picker.PropertyGenerator.Generate(type.ParameterType, context)
+                    : context.Faker.Create(type.ParameterType)).ToArray());
                 break;
             }
             catch (Exception e)
@@ -52,6 +71,11 @@ public class UserClassGenerator : GeneratorBase
         foreach (var propWithSetter in propValues)
         {
             propWithSetter.Key.SetValue(obj, propWithSetter.Value);
+        }
+
+        foreach (var propValue in customPropValues)
+        {
+            propValue.Key.SetValue(obj, propValue.Value);
         }
 
         return obj;

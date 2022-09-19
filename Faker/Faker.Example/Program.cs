@@ -1,4 +1,9 @@
-﻿using Faker.Core.Services.Generators;
+﻿using System.Linq.Expressions;
+using Faker.Core.Exceptions;
+using Faker.Core.Services;
+using Faker.Core.Services.Generators;
+using Faker.Core.Services.Generators.UsersTypesGenerators.UserClassProcessor;
+using Faker.Core.Services.Generators.ValueTypesGenerators;
 using Faker.Example.TestClasses;
 using Faker = Faker.Core.Services.Faker;
 
@@ -30,3 +35,23 @@ foreach (var values in listValues)
     }
     Console.WriteLine();
 }
+
+try
+{
+    faker.Create<WrongClassA>();
+
+}
+catch (CycledDependencyException)
+{
+    Console.WriteLine("Catched!");
+}
+
+var configuration = new DefaultPicker();
+configuration.Add<CustomUser, int>(x => x.Id, new IntegerGenerator());
+
+var customGenerator = new UserClassGenerator(configuration);
+customGenerator.SetNext(new IntegerGenerator());
+
+var customFaker = new global::Faker.Core.Services.Faker(customGenerator);
+var customUser = customFaker.Create<CustomUser>();
+Console.WriteLine($"Custom user. Age: {customUser.Age}, Id: {customUser.Id}");

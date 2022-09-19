@@ -25,7 +25,7 @@ public static class DefaultGeneratorsFactory
         dateTimeGenerator.SetNext(stringGenerator);
         stringGenerator.SetNext(listGenerator);
         listGenerator.SetNext(userClassGenerator);
-        userClassGenerator.SetNext(boolGenerator);
+        //userClassGenerator.SetNext(boolGenerator);
         
         return boolGenerator;
 
